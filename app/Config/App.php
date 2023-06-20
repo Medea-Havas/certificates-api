@@ -22,6 +22,7 @@ class App extends BaseConfig
      * explicitly and never rely on auto-guessing, especially in production
      * environments.
      */
+    // public string $baseURL = 'https://certificates-api.hhytest.com/';
     public string $baseURL = 'http://localhost:8080/';
 
     /**

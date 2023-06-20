@@ -34,8 +34,13 @@ $routes->resource('users');
 $routes->resource('courses');
 $routes->resource('userscourses');
 $routes->resource('coursesfromuser');
+$routes->resource('coursesnotfromuser');
 $routes->resource('usersfromcourse');
 $routes->resource('stats');
+$routes->resource('usercourse');
+$routes->resource('report');
+$routes->resource('templates');
+$routes->resource('coursetemplate');
 
 /*
  * --------------------------------------------------------------------
