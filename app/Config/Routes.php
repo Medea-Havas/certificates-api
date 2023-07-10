@@ -41,6 +41,8 @@ $routes->resource('usercourse');
 $routes->resource('report');
 $routes->resource('templates');
 $routes->resource('coursetemplate');
+$routes->resource('courseusersnotenrolled');
+$routes->resource('loadusers');
 
 /*
  * --------------------------------------------------------------------
