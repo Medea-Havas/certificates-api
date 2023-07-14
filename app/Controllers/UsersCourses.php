@@ -93,8 +93,7 @@ class UsersCourses extends ResourceController
               ]
             ];
             return $this->respondDeleted($response);
-        } else {
-            return $this->failNotFound('No user enrolled in that course');
         }
+        return $this->failNotFound('No user enrolled in that course');
     }
 }

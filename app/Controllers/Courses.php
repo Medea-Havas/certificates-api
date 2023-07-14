@@ -37,6 +37,60 @@ class Courses extends ResourceController
     {
         helper(['form']);
 
+        // Update certificate images
+        $certificate_id = $this->request->getVar('certificate_id');
+        $type = $this->request->getVar('type');
+        if (isset($certificate_id) && isset($type)) {
+            $db = db_connect();
+            $update = null;
+            switch ($type) {
+                case 'thumbnail':
+                    $certificate_thumbnail = $this->request->getFile('certificate_thumbnail');
+                    if (empty($certificate_thumbnail)) {
+                        return $this->fail('Certificate thumbnail is required');
+                    }
+                    $imageSize = $this->checkImageSize($certificate_thumbnail, 0.5);
+                    if ($imageSize) return $this->fail('Image size ' . $imageSize . 'MB is bigger than allowed 0.5MB');
+                    $certificate_thumbnail->move('./assets/certificates');
+                    $update = $db->query('UPDATE courses SET certificate_thumbnail="' . $certificate_thumbnail->getName() . '" WHERE id=' . $certificate_id);
+                    break;
+                case 'image':
+                    $certificate_image = $this->request->getFile('certificate_image');
+                    if (empty($certificate_image)) {
+                        return $this->fail('Certificate image is required');
+                    }
+                    $imageSize = $this->checkImageSize($certificate_image, 3);
+                    if ($imageSize) return $this->fail('Image size ' . $imageSize . 'MB is bigger than allowed 3MB');
+                    $certificate_image->move('./assets/certificates');
+                    $update = $db->query('UPDATE courses SET certificate_image="' . $certificate_image->getName() . '" WHERE id=' . $certificate_id);
+                    break;
+                    case 'image2':
+                        $certificate_image2 = $this->request->getFile('certificate_image2');
+                        if (empty($certificate_image2)) {
+                            return $this->fail('Certificate image 2 is required');
+                        }
+                        $imageSize = $this->checkImageSize($certificate_image2, 3);
+                        if ($imageSize) return $this->fail('Image size ' . $imageSize . 'MB is bigger than allowed 3MB');
+                        $certificate_image2->move('./assets/certificates');
+                        $update = $db->query('UPDATE courses SET certificate_image2="' . $certificate_image2->getName() . '" WHERE id=' . $certificate_id);
+                    break;
+                default:
+                    break;
+            }
+            if ($update) {
+                $response = [
+                    'status'   => 200,
+                    'error'    => null,
+                    'messages' => [
+                      'success' => 'Image updated'
+                    ]
+                  ];
+                  return $this->respondDeleted($response);
+            }
+            return $this->failNotFound('Course does not exist');
+        }
+
+        // Create certificate
         $title = $this->request->getVar('title');
         $accredited_by = $this->request->getVar('accredited_by');
         $accrediting_entity = $this->request->getVar('accrediting_entity');
@@ -72,13 +126,16 @@ class Courses extends ResourceController
             return $this->fail('Certificate image is required');
         }
 
-        $this->checkImageSize($certificate_thumbnail, 0.5);
-        $this->checkImageSize($certificate_image, 3);
+        $thumbnail_size = $this->checkImageSize($certificate_thumbnail, 0.5);
+        if ($thumbnail_size) return $this->fail('Image size ' . $thumbnail_size . 'MB is bigger than allowed 0.5MB');
+        $image_size = $this->checkImageSize($certificate_image, 3);
+        if ($image_size) return $this->fail('Image size ' . $image_size . 'MB is bigger than allowed 3MB');
         $certificate_thumbnail->move('./assets/certificates');
         $certificate_image->move('./assets/certificates');
 
         if (!empty($certificate_image2)) {
-            $this->checkImageSize($certificate_image2, 3);
+            $image2_size = $this->checkImageSize($certificate_image2, 3);
+            if ($image2_size) return $this->fail('Image size ' . $image2_size . 'MB is bigger than allowed 3MB');
             $certificate_image2->move('./assets/certificates');
         }
 
@@ -122,18 +179,18 @@ class Courses extends ResourceController
     private function checkImageSize($image, $maxSize)
     {
         if ($image->getSize() * 0.000001 > $maxSize) {
-            return $this->fail('It exceeds ' . $maxSize  . 'MB');
+            return number_format((float)$image->getSize() * 0.000001, 2, '.', '');
         }
+        return 0;
     }
 
     // update course
     public function update($id = null)
     {
-        if ($this->request->getBody() != 'php://input') {
-            $model = new CourseModel();
-            $data = json_decode($this->request->getBody());
-            // Insert to Database
-            $model->update($id, $data);
+        $model = new CourseModel();
+        $data = json_decode($this->request->getBody());
+        // Insert to Database
+        if ($model->update($id, $data)) {
             $response = [
               'status'   => 200,
               'error'    => null,
@@ -142,54 +199,8 @@ class Courses extends ResourceController
               ]
             ];
             return $this->respond($response);
-        } else {
-            helper(['form']);
-            $file = $this->request->getFile('certificate_thumbnail');
-
-            if (!$file->isValid()) {
-                return $this->fail($file->getErrorString());
-            }
-            var_dump($file);
-            // $title = $this->request->getVar('title');
-            // $accredited_by = $this->request->getVar('accredited_by');
-            // $accrediting_entity = $this->request->getVar('accrediting_entity');
-            // $file_number = $this->request->getVar('file_number');
-            // $city = $this->request->getVar('city');
-            // $credits = $this->request->getVar('credits');
-            // $hours = $this->request->getVar('hours');
-            // $tutors = $this->request->getVar('tutors');
-            // $content = $this->request->getVar('content');
-            // $date_init = $this->request->getVar('date_init');
-            // $date_end = $this->request->getVar('date_end');
-            // $certificate_thumbnail = $this->request->getFile('certificate_thumbnail');
-            // $certificate_image = $this->request->getFile('certificate_image');
-            // $certificate_image2 = $this->request->getFile('certificate_image2');
-            // $template_id = $this->request->getVar('template_id');
-
-            // if (!empty($certificate_image)) {
-            //     $this->checkImageSize($certificate_image, 3);
-            //     $certificate_image->move('./assets/certificates');
-            // }
-
-            // $data = [
-            //     'certificate_thumbnail' => $certificate_image->getName()
-            // ];
-            // var_dump($data);
-            // var_dump($certificate_image);
-            // $data = [];
-            // array_push($data, ['title' => $title]);
-            // var_dump($data['title']);
-            $response = [
-                'status'   => 200,
-                'error'    => null,
-                'messages' => [
-                  'success' => 'Course updated'
-                ]
-              ];
-            return $this->respond($response);
         }
-
-
+        return $this->failNotFound('No course with that id');
     }
 
     // delete course
