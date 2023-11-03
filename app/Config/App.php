@@ -48,7 +48,7 @@ class App extends BaseConfig
      * something else. If you are using mod_rewrite to remove the page set this
      * variable so that it is blank.
      */
-    public string $indexPage = 'index.php';
+    public string $indexPage = '';
 
     /**
      * --------------------------------------------------------------------------
@@ -65,7 +65,7 @@ class App extends BaseConfig
      *
      * WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
      */
-    public string $uriProtocol = 'REQUEST_URI';
+    public string $uriProtocol = 'PATH_INFO';
 
     /**
      * --------------------------------------------------------------------------
