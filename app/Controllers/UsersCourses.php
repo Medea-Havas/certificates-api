@@ -6,7 +6,7 @@ use App\Models\UserCourseModel;
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 
-class UsersCourses extends ResourceController
+class Userscourses extends ResourceController
 {
     use ResponseTrait;
 

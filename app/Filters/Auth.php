@@ -11,7 +11,7 @@ class Auth implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         // Auth
-        $header = $request->getHeaderLine('Authorization');
+        $header = $request->getHeaderLine('Token');
         $token = null;
         if (!empty($header)) {
             if (preg_match('/Bearer\s(\S+)/', $header, $matches)) {
@@ -36,8 +36,8 @@ class Auth implements FilterInterface
         }
 
         $db = db_connect();
-        $query = $db->query('SELECT id FROM admins WHERE token = "' . $token . '"')->getResultArray()[0];
-        if (!count($query)) {
+        $query = $db->query("SELECT id FROM admins WHERE token = '" . $token . "'")->getResult()[0]->id;
+        if (!($query)) {
             $response = service('response');
             $response->setBody('Access denied');
             $response->setStatusCode(401);

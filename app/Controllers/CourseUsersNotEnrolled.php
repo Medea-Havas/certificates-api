@@ -5,7 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 
-class CourseUsersNotEnrolled extends ResourceController
+class Courseusersnotenrolled extends ResourceController
 {
     use ResponseTrait;
 

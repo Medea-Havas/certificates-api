@@ -32,20 +32,20 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 $routes->resource('login');
 $routes->resource('report');
-$routes->resource('users');
-$routes->resource('courses');
-$routes->resource('userscourses');
-$routes->resource('coursesfromuser');
-$routes->resource('coursesnotfromuser');
-$routes->resource('usersfromcourse');
-$routes->resource('stats');
-$routes->resource('usercourse');
-$routes->resource('templates');
-$routes->resource('coursetemplate');
-$routes->resource('courseusersnotenrolled');
-$routes->resource('loadusers');
-$routes->resource('uploadimage');
-// $routes->resource('loadusers', ['filter' => 'auth']);
+$routes->resource('users', ['filter' => 'auth']);
+$routes->resource('courses', ['filter' => 'auth']);
+$routes->resource('userscourses', ['filter' => 'auth']);
+$routes->resource('coursesfromuser', ['filter' => 'auth']);
+$routes->resource('coursesnotfromuser', ['filter' => 'auth']);
+$routes->resource('usersfromcourse', ['filter' => 'auth']);
+$routes->resource('usersnotfromcourse', ['filter' => 'auth']);
+$routes->resource('stats', ['filter' => 'auth']);
+$routes->resource('usercourse', ['filter' => 'auth']);
+$routes->resource('templates', ['filter' => 'auth']);
+$routes->resource('coursetemplate', ['filter' => 'auth']);
+$routes->resource('courseusersnotenrolled', ['filter' => 'auth']);
+$routes->resource('loadusers', ['filter' => 'auth']);
+$routes->resource('uploadimage', ['filter' => 'auth']);
 
 /*
  * --------------------------------------------------------------------

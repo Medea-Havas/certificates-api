@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
 
-class UploadImage extends ResourceController
+class Uploadimage extends ResourceController
 {
     // create a course
     public function create()

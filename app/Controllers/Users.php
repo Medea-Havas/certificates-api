@@ -13,7 +13,7 @@ class Users extends ResourceController
     public function index()
     {
         $model = new UserModel();
-        $data = $model->findAll();
+        $data = $model->orderBy('id', 'desc')->findAll();
         return $this->respond($data, 200);
     }
 
@@ -21,7 +21,7 @@ class Users extends ResourceController
     public function show($id = null)
     {
         $model = new UserModel();
-        $data = $model->getWhere(['id' => $id])->getResult();
+        $data = $model->getWhere(['id' => $id])->getResult()[0];
         if ($data) {
             return $this->respond($data);
         } else {
@@ -47,12 +47,13 @@ class Users extends ResourceController
     {
         $model = new UserModel();
         $data = json_decode($this->request->getBody());
-        $model->insert($data);
+        $inserted = $model->insert($data);
         $response = [
           'status'   => 201,
           'error'    => null,
           'messages' => [
-            'success' => 'User created'
+            'success' => 'User created',
+            'id' => $inserted
           ]
         ];
 

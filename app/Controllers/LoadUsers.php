@@ -8,7 +8,7 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use stdClass;
 
-class LoadUsers extends ResourceController
+class Loadusers extends ResourceController
 {
     use ResponseTrait;
 
@@ -20,7 +20,7 @@ class LoadUsers extends ResourceController
         $model = new UserModel();
         $model2 = new UserCourseModel();
         $excludedFromImport = array();
-        for ($i=0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($data); $i++) {
             $exists = $db->query('SELECT nif FROM users WHERE nif = "' . strtoupper($data[$i]['nif']) . '"')->getResultArray();
             if (!count($exists)) {
                 $data[$i]['name'] = ucwords($data[$i]['name']);
