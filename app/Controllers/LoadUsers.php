@@ -31,7 +31,7 @@ class Loadusers extends ResourceController
                 $temp = new stdClass();
                 $temp->user_id = $userId;
                 $temp->course_id = intval($data[$i]['course']);
-                $temp->date_completed = date("Y-m-d H:i:s");
+                $temp->date_completed = date($data[$i]['completed']);
                 $model2->insert($temp);
             } else {
                 array_push($excludedFromImport, strval($exists[0]['nif']));
