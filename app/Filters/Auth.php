@@ -11,35 +11,22 @@ class Auth implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         // Auth
-        $header = $request->getHeaderLine('Token');
-        $token = null;
-        if (!empty($header)) {
-            if (preg_match('/Bearer\s(\S+)/', $header, $matches)) {
-                $token = $matches[1];
-            }
-        }
-
-        // Prod Auth
-        if(is_null($token) || empty($token)) {
-            $tempToken = $request->getServer('REDIRECT_HTTP_AUTHORIZATION');
-            if (preg_match('/Bearer\s(\S+)/', $tempToken, $matches)) {
-                $token = $matches[1];
-            }
-        }
+        $token = $request->getHeaderLine('Token');
 
         // Check if token is null or empty
         if(is_null($token) || empty($token)) {
             $response = service('response');
-            $response->setBody('Access denied');
+            $response->setBody('Access denied. No token found');
             $response->setStatusCode(401);
             return $response;
         }
 
+        // Check token is valid
         $db = db_connect();
         $query = $db->query("SELECT id FROM admins WHERE token = '" . $token . "'")->getResult()[0]->id;
         if (!($query)) {
             $response = service('response');
-            $response->setBody('Access denied');
+            $response->setBody('Access denied. Token does not match.');
             $response->setStatusCode(401);
             return $response;
         }

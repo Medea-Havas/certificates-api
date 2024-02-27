@@ -46,6 +46,8 @@ $routes->resource('coursetemplate', ['filter' => 'auth']);
 $routes->resource('courseusersnotenrolled', ['filter' => 'auth']);
 $routes->resource('loadusers', ['filter' => 'auth']);
 $routes->resource('uploadimage', ['filter' => 'auth']);
+$routes->resource('registerexternal', ['filter' => 'auth']);
+$routes->resource('emitcertificate', ['filter' => 'auth']);
 
 /*
  * --------------------------------------------------------------------
